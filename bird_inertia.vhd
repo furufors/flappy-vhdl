@@ -31,15 +31,21 @@ begin
 			elsif (unsigned(height) < position - 20) then
 				position := position - 1;
 			end if;
+			
+			-- Change another step if the difference is bigger than 40 px
+			if (unsigned(height) > position + 40) then
+				position := position + 2;
+			elsif (unsigned(height) < position - 40) then
+				position := position - 2;
+			end if;
 
 			-- Coerce position
 			if unsigned(position) > 220 then
-				inertial_height <= std_logic_vector(to_unsigned(220,8));
+				position := to_unsigned(220,8);
 			elsif unsigned(position) < 20 then
-				inertial_height <= std_logic_vector(to_unsigned(20,8));
-			else
-				inertial_height <= std_logic_vector(position);
+				position := to_unsigned(20,8);
 			end if;
+			inertial_height <= std_logic_vector(position);
 		end if;
 	end process;
 end;
