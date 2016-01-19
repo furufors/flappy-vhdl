@@ -76,13 +76,13 @@ architecture behavoiour of vhdl_ingenjors is
 	);
 	end component;
 	
-	component bird_inertia is
-	port (
-		height          : in  std_logic_vector(7 downto 0);
-		step            : in  std_logic;
-		inertial_height : out std_logic_vector(7 downto 0)
-	);
-	end component;
+--	component bird_inertia is
+--	port (
+--		height          : in  std_logic_vector(7 downto 0);
+--		step            : in  std_logic;
+--		inertial_height : out std_logic_vector(7 downto 0)
+--	);
+--	end component;
 	
 	signal Done : std_logic;
 	signal PulseWidth : std_logic_vector(17 downto 0);
@@ -154,7 +154,7 @@ bird_writer_inst : bird_writer
 
 	LEDR <= bird_height;
 	
-physics : bird_inertia
+physics : entity work.bird_inertia
 	port map (
 		bird_height,
 		done,
