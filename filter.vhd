@@ -12,21 +12,26 @@ entity filter is
 end;
 
 architecture rtl of filter is
-	signal i0 : unsigned(19 downto 0) := (others => '0');
-	signal i1 : unsigned(19 downto 0) := (others => '0');
-	signal i2 : unsigned(19 downto 0) := (others => '0');
-	signal i3 : unsigned(19 downto 0) := (others => '0');
-	signal iA : unsigned(19 downto 0) := (others => '0');
+	signal i0 : std_logic_vector(19 downto 0) := (others => '0');
+	signal i1 : std_logic_vector(19 downto 0) := (others => '0');
+	signal i2 : std_logic_vector(19 downto 0) := (others => '0');
+	signal i3 : std_logic_vector(19 downto 0) := (others => '0');
+	signal iA : std_logic_vector(19 downto 0) := (others => '0');
 begin
-	iA <= i0 + i1 + i2 + i3;
+	iA <= std_logic_vector(
+			unsigned(i0) + 
+			unsigned(i1) + 
+			unsigned(i2) + 
+			unsigned(i3)
+		);
 	-- Output sum of last 4 values / 4
-	Output <= std_logic_vector(iA(19 downto 2));
+	Output <= iA(19 downto 2);
 	
 	process (step)
 	begin
 		if rising_edge(step) and step = '1' then
 			-- Extend input to 19 bits for 2x carry
-			i0 <= unsigned('0' & '0' & Input); 
+			i0 <= '0' & '0' & Input; 
 			i1 <= i0;
 			i2 <= i1;
 			i3 <= i2;
