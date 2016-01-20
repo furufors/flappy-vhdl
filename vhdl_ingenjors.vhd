@@ -27,6 +27,7 @@ architecture behavoiour of vhdl_ingenjors is
 	signal status_sync_write_signal : std_logic;
 	signal bird_height : std_logic_vector(7 downto 0);
 	signal bird_inerial_height : std_logic_vector(7 downto 0);
+	signal random_signal : std_logic_vector(2 downto 0);
 begin
 sensor : entity work.hcsr04
 	port map (
@@ -53,7 +54,7 @@ height : entity work.sensor_to_height
 random : entity work.sensor_to_prng
 	port map (
 		sensor => FilteredSensor,
-		random => LEDG
+		random => random_signal
 	);
 	
 -- Routing of signals to the vga-component
@@ -83,7 +84,8 @@ controller : entity work.vga_component
 graphics_inst : entity work.game_graphics
 	port map (
 		CLOCK_50,
-		bird_inerial_height,
+		bird_height,
+		random_signal,
 		adress_vga_signal,
 		data_vga_signal,
 		write_vga_signal,
