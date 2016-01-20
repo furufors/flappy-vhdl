@@ -6,7 +6,7 @@ use ieee.numeric_std.all;
 entity game_graphics is
 	port (
 		clk               : in  std_logic;
-		bird_height       : in  std_logic_vector( 7 downto 0);
+		height            : in  std_logic_vector( 7 downto 0);
 		random				: in  std_logic_vector( 2 downto 0);
 		adress_vga        : out std_logic_vector(16 downto 0);
 		data_vga          : out std_logic_vector( 2 downto 0);
@@ -23,6 +23,11 @@ architecture behavoiour of game_graphics is
 		draw_state,
 		update_obstacle_state
 	);
+	type bird is
+	record
+		pos_x : unsigned(8 downto 0);
+		pos_y : unsigned(7 downto 0);
+	end record;
 	
 	type obstacle is
 	record
@@ -36,6 +41,7 @@ architecture behavoiour of game_graphics is
 	signal counter_y : unsigned(7 downto 0) := (others => '0');
 	
 	type obstacle_list is array (0 to 3) of obstacle;
+	signal flappy : bird := (pos_x => to_unsigned(0,9), pos_y => to_unsigned(120,8));
 	
 	constant empty_obstacle : obstacle := (
 		left_x => to_unsigned(0,9),
@@ -48,6 +54,7 @@ begin
 	process(clk)
 		variable current_state : game_state := init_game_state;
 		variable game_sync_timer : unsigned(31 downto 0) := (others => '0');
+		variable frame_counter : unsigned(31 downto 0) := (others => '0');
 		variable pixel_color : std_logic_vector(2 downto 0);
 	begin
 		if rising_edge(clk) then
@@ -99,7 +106,7 @@ begin
 					end if;
 				
 					-- Set to bird
-					if (std_logic_vector(counter_y) = bird_height) then
+					if (counter_y = flappy.pos_y) then
 						pixel_color := "111";
 					end if;
 					data_vga <= pixel_color;
@@ -123,8 +130,22 @@ begin
 				end if;
 				
 			when update_obstacle_state =>
+				frame_counter := frame_counter + 1;
 				write_VGA <= '0';
 				current_state := wait_state;
+				
+				if (frame_counter(1) = '0') then
+					-- Every other frame, update position and bounds check
+					if (height > std_logic_vector(to_unsigned(120,8)) and
+						 flappy.pos_y > to_unsigned(20,8)
+						) then
+						flappy.pos_y <= flappy.pos_y - 1; -- up
+					elsif (height < std_logic_vector(to_unsigned(120,8)) and
+						    flappy.pos_y < to_unsigned(220,8)
+						) then
+						flappy.pos_y <= flappy.pos_y + 1; -- down
+					end if;
+				end if;
 				
 			end case;
 		end if;

@@ -31,7 +31,11 @@ begin
 	begin
 		if rising_edge(step) and step = '1' then
 			-- Extend input to 19 bits for 2x carry
-			i0 <= '0' & '0' & Input; 
+			if (input /= std_logic_vector(to_unsigned(0,20))) then
+				i0 <= '0' & '0' & Input;
+			else
+				i0 <= i1;
+			end if; 
 			i1 <= i0;
 			i2 <= i1;
 			i3 <= i2;
