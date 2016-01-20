@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity bird_writer is
+entity game_graphics is
 	port (
 		clk          : in  std_logic;
 		bird_height       : in  std_logic_vector(7 downto 0);
@@ -14,7 +14,7 @@ entity bird_writer is
 	);
 end entity;
 
-architecture behavoiour of bird_writer is
+architecture behavoiour of game_graphics is
 	signal counter_x : unsigned(8 downto 0) := (others => '0');
 	signal counter_y : unsigned(7 downto 0)  := (others => '0');
 begin
