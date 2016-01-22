@@ -117,7 +117,7 @@ begin
 						adress_vga <= std_logic_vector(counter_x) & std_logic_vector(counter_y);
 						
 						-- Assume background
-						pixel_color := "100";
+						pixel_color := "100"; -- Background color
 						
 						-- Check if given pixel is within an obstacle
 						pixel_color := check_pixel(obstacles(0), counter_x, counter_y, pixel_color);
@@ -141,7 +141,7 @@ begin
 								-- Bird hit obstacle!
 								current_state := end_game_state;
 							end if;
-							pixel_color := "111";
+							pixel_color := "001"; -- Bird color
 						end if;
 						data_vga <= pixel_color;
 						
@@ -171,14 +171,13 @@ begin
 					-- Update the birds position
 					if (frame_counter(1) = '0') then
 						-- Every other frame, update position and bounds check
-						if (height > std_logic_vector(to_unsigned(120,8)) and
-							 flappy.pos_y > to_unsigned(20,8)
-							) then
-							flappy.pos_y <= flappy.pos_y - 1; -- up
-						elsif (height < std_logic_vector(to_unsigned(120,8)) and
-								 flappy.pos_y < to_unsigned(220,8)
+						if (height > std_logic_vector(to_unsigned(128,8)) and
+							 flappy.pos_y < to_unsigned(220,8)
 							) then
 							flappy.pos_y <= flappy.pos_y + 1; -- down
+						elsif (flappy.pos_y > to_unsigned(20,8)
+							) then
+							flappy.pos_y <= flappy.pos_y - 1; -- up
 						end if;
 					end if;
 					

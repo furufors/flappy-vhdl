@@ -129,16 +129,25 @@ begin
 				-- Update output from VGA-memory
 				case VGA_DATA_r is
 				when "100" =>
-					-- Background: saddle brown
-					VGA_R <= "10001011"; -- 139
-					VGA_G <= "01000101"; -- 69
-					VGA_B <= "00010011"; -- 19
+					-- Background: Medium turqouise
+					VGA_R <= "01001000"; -- 72
+					VGA_G <= "11010001"; -- 209
+					VGA_B <= "11001100"; -- 204
 				when "010" =>
 					-- Pipes: Forest green
+					VGA_R <= "00100010"; -- 34
+					VGA_G <= "10001011"; -- 139
+					VGA_B <= "00100010"; -- 34
+				when "001" =>
+					-- Bird: #ffd500
+					VGA_R <= "11111111"; -- 255
+					VGA_G <= "11010101"; -- 213
+					VGA_B <= "00000000"; -- 0
 				when others =>
 					VGA_R <= (others => VGA_DATA_r(2));
 					VGA_G <= (others => VGA_DATA_r(1));
 					VGA_B <= (others => VGA_DATA_r(0));
+				end case;
 			end if;
 		end if;
 	end process process_screen_colors;

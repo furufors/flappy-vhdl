@@ -45,7 +45,7 @@ package body obstacle_pkg is
 				y > o.lower_top_y
 			)
 		) then
-			return "010"; -- obstacle color
+			return "010"; -- Obstacle color
 		else
 			return col; -- no color change
 		end if;
