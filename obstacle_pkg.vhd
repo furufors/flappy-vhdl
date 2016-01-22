@@ -54,7 +54,7 @@ package body obstacle_pkg is
 	function update_obstacle(o : obstacle; random : std_logic_vector(2 downto 0)) return obstacle is
 		variable temp : obstacle; -- The updated obstacle
 	begin
-		if (to_disp_x(o.right_x) > 0) then
+		if (o.right_x > 40) then
 			-- Normal step
 			temp.left_x := o.left_x - 1;
 			temp.right_x := o.right_x - 1;
@@ -67,29 +67,29 @@ package body obstacle_pkg is
 			-- Random height
 			case random is
 			when "000" =>
-				temp.upper_bottom_y := to_unsigned(20,8);
+				temp.upper_bottom_y := to_unsigned(20, 8);
 				temp.lower_top_y    := to_unsigned(100,8);
 			when "001" =>
-				temp.upper_bottom_y := to_unsigned(40,8);
+				temp.upper_bottom_y := to_unsigned(40, 8);
 				temp.lower_top_y    := to_unsigned(120,8);
 			when "010" =>
-				temp.upper_bottom_y := to_unsigned(60,8);
+				temp.upper_bottom_y := to_unsigned(60, 8);
 				temp.lower_top_y    := to_unsigned(140,8);
 			when "011" =>
-				temp.upper_bottom_y := to_unsigned(80,8);
+				temp.upper_bottom_y := to_unsigned(80, 8);
 				temp.lower_top_y    := to_unsigned(160,8);
 			when "100" =>
+				temp.upper_bottom_y := to_unsigned(80, 8);
+				temp.lower_top_y    := to_unsigned(160,8);
+			when "101" =>
 				temp.upper_bottom_y := to_unsigned(100,8);
 				temp.lower_top_y    := to_unsigned(180,8);
-			when "101" =>
+			when "110" =>
 				temp.upper_bottom_y := to_unsigned(120,8);
 				temp.lower_top_y    := to_unsigned(200,8);
-			when "110" =>
+			when "111" =>
 				temp.upper_bottom_y := to_unsigned(140,8);
 				temp.lower_top_y    := to_unsigned(220,8);
-			when "111" =>
-				temp.upper_bottom_y := to_unsigned(160,8);
-				temp.lower_top_y    := to_unsigned(240,8);
 			end case;
 		end if;
 		return temp;

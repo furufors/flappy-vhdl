@@ -7,7 +7,7 @@ entity vhdl_ingenjors is
 		CLOCK_50   : in std_logic;
 		GPIO_TX_P0 : in std_logic;
 		GPIO_TX_P1 : out std_logic;
-		LEDR       : out std_logic_vector(7 downto 0);
+		LEDR       : out std_logic_vector(17 downto 0);
 		LEDG       : out std_logic_vector(2 downto 0);
 		SW			: in std_logic_vector(17 downto 0);
 		-- till VGA enheten
@@ -28,6 +28,7 @@ architecture behavoiour of vhdl_ingenjors is
 	signal bird_height : std_logic_vector(7 downto 0);
 	signal bird_inerial_height : std_logic_vector(7 downto 0);
 	signal random_signal : std_logic_vector(2 downto 0);
+	signal score_signal : std_logic_vector(31 downto 0);
 begin
 sensor : entity work.hcsr04
 	port map (
@@ -90,10 +91,11 @@ graphics_inst : entity work.game_graphics
 		adress_vga_signal,
 		data_vga_signal,
 		write_vga_signal,
-		status_sync_write_signal
+		status_sync_write_signal,
+		score_signal
 	);
 
-	LEDR <= bird_height;
+	LEDR <= score_signal(17 downto 0);
 	
 physics : entity work.bird_inertia
 	port map (

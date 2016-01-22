@@ -13,7 +13,8 @@ entity game_graphics is
 		adress_vga        : out std_logic_vector(16 downto 0);
 		data_vga          : out std_logic_vector( 2 downto 0);
 		write_VGA         : out std_logic;
-		status_sync_write : in  std_logic
+		status_sync_write : in  std_logic;
+		score_out			: out std_logic_vector(31 downto 0)
 	);
 end entity;
 
@@ -54,7 +55,8 @@ begin
 		variable frame_counter : unsigned(31 downto 0) := (others => '0');
 		variable pixel_color : std_logic_vector(2 downto 0);
 	begin
-
+		score_out <= std_logic_vector(frame_counter / 60);
+		
 		if rising_edge(clk) then
 			if (reset_n = '0') then
 				-- Reset game to initial state
@@ -169,16 +171,14 @@ begin
 					current_state := wait_state;
 					
 					-- Update the birds position
-					if (frame_counter(1) = '0') then
-						-- Every other frame, update position and bounds check
-						if (height > std_logic_vector(to_unsigned(128,8)) and
-							 flappy.pos_y < to_unsigned(220,8)
-							) then
-							flappy.pos_y <= flappy.pos_y + 1; -- down
-						elsif (flappy.pos_y > to_unsigned(20,8)
-							) then
-							flappy.pos_y <= flappy.pos_y - 1; -- up
-						end if;
+					---- Every other frame, update position and bounds check
+					if (unsigned(height) > flappy.pos_y and
+						 flappy.pos_y > to_unsigned(20,8)
+						) then
+						flappy.pos_y <= flappy.pos_y - 1; -- up
+					elsif (flappy.pos_y < to_unsigned(220,8)
+						) then
+						flappy.pos_y <= flappy.pos_y + 1; -- down
 					end if;
 					
 					-- Update the obstacles
