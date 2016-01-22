@@ -127,9 +127,18 @@ begin
 				VGA_B <= (others => '0');
 			else
 				-- Update output from VGA-memory
-				VGA_R <= (others => VGA_DATA_r(2));
-				VGA_G <= (others => VGA_DATA_r(1));
-				VGA_B <= (others => VGA_DATA_r(0));
+				case VGA_DATA_r is
+				when "100" =>
+					-- Background: saddle brown
+					VGA_R <= "10001011"; -- 139
+					VGA_G <= "01000101"; -- 69
+					VGA_B <= "00010011"; -- 19
+				when "010" =>
+					-- Pipes: Forest green
+				when others =>
+					VGA_R <= (others => VGA_DATA_r(2));
+					VGA_G <= (others => VGA_DATA_r(1));
+					VGA_B <= (others => VGA_DATA_r(0));
 			end if;
 		end if;
 	end process process_screen_colors;

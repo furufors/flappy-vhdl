@@ -84,6 +84,7 @@ controller : entity work.vga_component
 graphics_inst : entity work.game_graphics
 	port map (
 		CLOCK_50,
+		SW(17),
 		bird_height,
 		random_signal,
 		adress_vga_signal,
