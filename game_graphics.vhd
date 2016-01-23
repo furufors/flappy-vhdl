@@ -13,7 +13,7 @@ entity game_graphics is
 		random				: in  std_logic_vector( 2 downto 0);
 		adress_vga        : out std_logic_vector(16 downto 0);
 		data_vga          : out std_logic_vector( 2 downto 0);
-		write_VGA         : out std_logic;
+		write_vga         : out std_logic;
 		status_sync_write : in  std_logic;
 		score_out			: out std_logic_vector(31 downto 0)
 	);
@@ -75,7 +75,7 @@ begin
 					
 				when wait_state =>
 					-- Synchronizes the frame rate
-					write_VGA <= '0';
+					write_vga <= '0';
 					if (game_sync_timer < 833333) then
 						-- Draw a new frame 60 times per seconds.
 						current_state := wait_state;
@@ -86,7 +86,7 @@ begin
 			
 				when draw_state =>
 					if status_sync_write = '1' then
-						write_VGA <= '1'; -- Enable write_VGA (WE on ram)
+						write_vga <= '1'; -- Enable write_vga (WE on ram)
 						
 						-- Always keep the write address updated with current position.
 						-- Memory adressing is 17 bits, the first 9 represents x-position and the
@@ -125,12 +125,12 @@ begin
 						end if;
 					else
 						-- Don't write when status_sync_write = 0
-						write_VGA <= '0';
+						write_vga <= '0';
 					end if;
 					
 				when update_objects_state =>
 					frame_counter := frame_counter + 1;
-					write_VGA <= '0';
+					write_vga <= '0';
 					current_state := wait_state;
 					
 					-- Update the birds position
@@ -147,7 +147,7 @@ begin
 					
 				when end_game_state =>
 					if status_sync_write = '1' then
-						write_VGA <= '1'; -- Enable write_VGA (WE on ram)
+						write_vga <= '1'; -- Enable write_vga (WE on ram)
 						
 						-- Always keep the write address updated with current position.
 						-- Memory adressing is 17 bits, the first 9 represents x-position and the
