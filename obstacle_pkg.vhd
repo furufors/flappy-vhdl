@@ -21,6 +21,31 @@ package obstacle_pkg is
 		y : unsigned(7 downto 0);
 		col : std_logic_vector(2 downto 0)
 	) return std_logic_vector;
+	
+	constant obstacle_init_0 : obstacle := (
+						left_x => to_unsigned(40,9),
+						right_x => to_unsigned(40,9),
+						upper_bottom_y => to_unsigned(0,8),
+						lower_top_y => to_unsigned(240,8)
+					);
+	constant obstacle_init_1 : obstacle := (
+						left_x => to_unsigned(120,9),
+						right_x => to_unsigned(120,9),
+						upper_bottom_y => to_unsigned(0,8),
+						lower_top_y => to_unsigned(240,8)
+					);
+	constant obstacle_init_2 : obstacle := (
+						left_x => to_unsigned(200,9),
+						right_x => to_unsigned(200,9),
+						upper_bottom_y => to_unsigned(0,8),
+						lower_top_y => to_unsigned(240,8)
+					);
+	constant obstacle_init_3 : obstacle := (
+						left_x => to_unsigned(280,9),
+						right_x => to_unsigned(280,9),
+						upper_bottom_y => to_unsigned(0,8),
+						lower_top_y => to_unsigned(240,8)
+					);
 end;
 
 package body obstacle_pkg is 
@@ -37,7 +62,7 @@ package body obstacle_pkg is
 		col : std_logic_vector(2 downto 0)
 	) return std_logic_vector is
 	begin
-		if (
+		if ( -- Within bounds
 			x > to_disp_x(o.left_x) and
 			x < to_disp_x(o.right_x) and
 			(
@@ -54,7 +79,7 @@ package body obstacle_pkg is
 	function update_obstacle(o : obstacle; random : std_logic_vector(2 downto 0)) return obstacle is
 		variable temp : obstacle; -- The updated obstacle
 	begin
-		if (o.right_x > 40) then
+		if (to_disp_x(o.right_x) > 0) then
 			-- Normal step
 			temp.left_x := o.left_x - 1;
 			temp.right_x := o.right_x - 1;

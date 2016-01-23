@@ -19,8 +19,8 @@ end entity;
 
 architecture behavoiour of vhdl_ingenjors is	
 	signal Done : std_logic;
-	signal PulseWidth : std_logic_vector(17 downto 0);
-	signal FilteredSensor : std_logic_vector(17 downto 0);
+	signal PulseWidth : std_logic_vector(22 downto 0);
+	signal FilteredSensor : std_logic_vector(22 downto 0);
 	signal adress_vga_signal : std_logic_vector(16 downto 0);
 	signal data_vga_signal : std_logic_vector(2 downto 0);
 	signal write_vga_signal : std_logic;

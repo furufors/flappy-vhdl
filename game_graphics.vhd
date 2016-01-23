@@ -3,6 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.obstacle_pkg.all;
+use work.bird_pkg.all;
 
 entity game_graphics is
 	port (
@@ -27,12 +28,6 @@ architecture behavoiour of game_graphics is
 		update_objects_state,
 		end_game_state
 	);
-	
-	type bird is
-	record
-		pos_x : unsigned(8 downto 0);
-		pos_y : unsigned(7 downto 0);
-	end record;
 	
 	signal counter_x : unsigned(8 downto 0) := (others => '0');
 	signal counter_y : unsigned(7 downto 0) := (others => '0');
@@ -72,30 +67,10 @@ begin
 				when init_game_state =>
 					-- Initiate infinite thin obstacles
 					-- will be given correct width at first update
-					obstacles(0) <= (
-						left_x => to_unsigned(40,9),
-						right_x => to_unsigned(40,9),
-						upper_bottom_y => to_unsigned(0,8),
-						lower_top_y => to_unsigned(240,8)
-					);
-					obstacles(1) <= (
-						left_x => to_unsigned(120,9),
-						right_x => to_unsigned(120,9),
-						upper_bottom_y => to_unsigned(0,8),
-						lower_top_y => to_unsigned(240,8)
-					);
-					obstacles(2) <= (
-						left_x => to_unsigned(200,9),
-						right_x => to_unsigned(200,9),
-						upper_bottom_y => to_unsigned(0,8),
-						lower_top_y => to_unsigned(240,8)
-					);
-					obstacles(3) <= (
-						left_x => to_unsigned(280,9),
-						right_x => to_unsigned(280,9),
-						upper_bottom_y => to_unsigned(0,8),
-						lower_top_y => to_unsigned(240,8)
-					);
+					obstacles(0) <= obstacle_init_0;
+					obstacles(1) <= obstacle_init_1;
+					obstacles(2) <= obstacle_init_2;
+					obstacles(3) <= obstacle_init_3;
 					current_state := wait_state;
 					
 				when wait_state =>
@@ -127,24 +102,12 @@ begin
 						pixel_color := check_pixel(obstacles(2), counter_x, counter_y, pixel_color);
 						pixel_color := check_pixel(obstacles(3), counter_x, counter_y, pixel_color);
 						
-						-- Set to bird
-						if (
-							(
-								counter_y = flappy.pos_y or
-								counter_y = flappy.pos_y + 1 or
-								counter_y = flappy.pos_y - 1
-							) and (
-								counter_x = flappy.pos_x or
-								counter_x = flappy.pos_x + 1 or
-								counter_x = flappy.pos_x - 1
-							)
-						) then
-							if (pixel_color = "010") then
-								-- Bird hit obstacle!
-								current_state := end_game_state;
-							end if;
-							pixel_color := "001"; -- Bird color
+						-- Check if bird crashes into object using the color
+						if (check_hit(flappy, counter_x, counter_y, pixel_color) = '1') then 
+							current_state := end_game_state;
 						end if;
+						-- Update color if within bird
+						pixel_color := check_pixel(flappy, counter_x, counter_y, pixel_color);
 						data_vga <= pixel_color;
 						
 						-- Counter incrementation, x-first then y
@@ -172,14 +135,7 @@ begin
 					
 					-- Update the birds position
 					---- Every other frame, update position and bounds check
-					if (unsigned(height) > flappy.pos_y and
-						 flappy.pos_y > to_unsigned(20,8)
-						) then
-						flappy.pos_y <= flappy.pos_y - 1; -- up
-					elsif (flappy.pos_y < to_unsigned(220,8)
-						) then
-						flappy.pos_y <= flappy.pos_y + 1; -- down
-					end if;
+					flappy <= update_bird(flappy, height);
 					
 					-- Update the obstacles
 					if (frame_counter(1) = '0') then

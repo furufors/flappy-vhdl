@@ -9,7 +9,7 @@ entity hcsr04 is
 		Echo       : in  std_logic;
 		Trig       : out std_logic;
 		Done       : out std_logic;
-		PulseWidth : out std_logic_vector(17 downto 0)
+		PulseWidth : out std_logic_vector(22 downto 0)
 	);
 end;
 
@@ -39,7 +39,7 @@ begin
 
 			if PeriodCounter = (MaxPeriod - 1) then -- 50 ms
 				-- Set output based on pulse width
-				PulseWidth <= std_logic_vector(WidthCounter(22 downto 5));
+				PulseWidth <= std_logic_vector(WidthCounter(22 downto 0));
 				-- Signal that a measurement is completed
 				Done <= '1';
 			elsif PeriodCounter = MaxPeriod then
