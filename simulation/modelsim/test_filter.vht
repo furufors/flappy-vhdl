@@ -14,20 +14,20 @@ use ieee.numeric_std.all;
 entity test_filter is
 end test_filter;
 architecture rtl of test_filter is
-  signal step   : in  std_logic;
-  signal input  : in  std_logic_vector(22 downto 0);
-  signal output : out std_logic_vector(22 downto 0);
+  signal step   : std_logic;
+  signal input  : std_logic_vector(22 downto 0);
+  signal output : std_logic_vector(22 downto 0);
   constant step_pulse : time := 20 ns;
 begin
   i1 : entity work.filter
  port map (
-    step;
-    input;
+    step,
+    input,
     output
   );
 init : process
 begin
-  input <= to_unsigned(100,23);
+  input <= std_logic_vector(to_unsigned(100,23));
   step <= '0';
   wait for step_pulse;
   step <= '1';

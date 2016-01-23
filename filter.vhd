@@ -6,7 +6,7 @@
 -- Target Devices: ALTERA Cyclone IV EP4CE115F29C7
 -- Description:
 --   Filters an input vector by averaging the last four samples as well as
---   replacing any zero-vectors by the previous sample.
+--   replacing any zero-vectors by the previous average sample.
 library ieee;
 
 use ieee.std_logic_1164.all;
@@ -43,7 +43,7 @@ begin
       if (input /= std_logic_vector(to_unsigned(0,23))) then
         i0 <= '0' & '0' & input;
       else
-        i0 <= i1;
+        i0 <= '0' & '0' & ia(24 downto 2);
       end if;
       i1 <= i0;
       i2 <= i1;

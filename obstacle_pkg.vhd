@@ -141,6 +141,9 @@ package body obstacle_pkg is
       when "111" =>
         temp.upper_bottom_y := to_unsigned(140,8);
         temp.lower_top_y    := to_unsigned(220,8);
+		when others =>
+		  temp.upper_bottom_y := to_unsigned(80, 8);
+        temp.lower_top_y    := to_unsigned(160,8);
       end case;
     end if;
     return temp;
