@@ -37,7 +37,7 @@ begin
       -- Increment counter
       period_counter := period_counter + 1;
 
-      -- Pulse the trigger for 24 µs
+      -- Pulse the trigger for 24 us
       if period_counter < 120 then
         trig <= '1';
       else
