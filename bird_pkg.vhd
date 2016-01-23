@@ -32,6 +32,12 @@ package bird_pkg is
 		y : unsigned(7 downto 0);
 		col : std_logic_vector(2 downto 0)
 	) return std_logic;
+	
+	constant bird_init : bird := (pos_x => to_unsigned(10,9), pos_y => to_unsigned(120,8));
+	
+	constant upper_limit : unsigned(7 downto 0) := to_unsigned( 20,8);
+	constant lower_limit : unsigned(7 downto 0) := to_unsigned(220,8);
+	constant threshold_height : unsigned(7 downto 0) := to_unsigned(100,8);
 end;
 
 package body bird_pkg is 	
@@ -67,13 +73,10 @@ package body bird_pkg is
 		variable temp : bird;
 	begin
 		temp.pos_x := b.pos_x;
-		if (unsigned(h) > b.pos_y and
-			 b.pos_y < to_unsigned(220,8)
-			) then
-			temp.pos_y := b.pos_y + 1; -- down
-		elsif (b.pos_y > to_unsigned(20,8)
-			) then
+		if (unsigned(h) < threshold_height and b.pos_y > upper_limit) then
 			temp.pos_y := b.pos_y - 1; -- up
+		elsif (b.pos_y < lower_limit) then
+			temp.pos_y := b.pos_y + 1; -- down
 		end if;
 		return temp;
 	end;
@@ -84,17 +87,8 @@ package body bird_pkg is
 		y : unsigned(7 downto 0)
 	) return std_logic is
 	begin
-		if (
-			(
-				y = b.pos_y or
-				y = b.pos_y + 1 or
-				y = b.pos_y - 1
-			) and (
-				x = b.pos_x or
-				x = b.pos_x + 1 or
-				x = b.pos_x - 1
-			)
-		) then
+		if ((y = b.pos_y or y = b.pos_y + 1 or	y = b.pos_y - 1) and
+			 (x = b.pos_x or x = b.pos_x + 1 or x = b.pos_x - 1)) then
 		-- Insanely redundant...
 			return '1';
 		else

@@ -13,7 +13,7 @@ package obstacle_pkg is
 		lower_top_y 	: unsigned(7 downto 0);
 	end record;
 	
-	function to_disp_x(x : unsigned(8 downto 0)) return unsigned;
+	function to_obstacle_x(x : unsigned(8 downto 0)) return unsigned;
 	function update_obstacle(o : obstacle; random : std_logic_vector(2 downto 0)) return obstacle;
 	function check_pixel(
 		o : obstacle;
@@ -50,10 +50,10 @@ end;
 
 package body obstacle_pkg is 
 	-- Function to convert from obstacles internal representation to screen coordinate
-	function to_disp_x(x : unsigned(8 downto 0)) return unsigned is
+	function to_obstacle_x(x : unsigned(8 downto 0)) return unsigned is
 	begin
-		return x - to_unsigned(40,9);
-	end to_disp_x;
+		return x + to_unsigned(40,9);
+	end;
 	
 	function check_pixel(
 		o : obstacle;
@@ -63,8 +63,8 @@ package body obstacle_pkg is
 	) return std_logic_vector is
 	begin
 		if ( -- Within bounds
-			x > to_disp_x(o.left_x) and
-			x < to_disp_x(o.right_x) and
+			to_obstacle_x(x) > o.left_x and
+			to_obstacle_x(x) < o.right_x and
 			(
 				y < o.upper_bottom_y or
 				y > o.lower_top_y
@@ -79,7 +79,7 @@ package body obstacle_pkg is
 	function update_obstacle(o : obstacle; random : std_logic_vector(2 downto 0)) return obstacle is
 		variable temp : obstacle; -- The updated obstacle
 	begin
-		if (to_disp_x(o.right_x) > 0) then
+		if (o.right_x > to_obstacle_x(to_unsigned(0,9))) then
 			-- Normal step
 			temp.left_x := o.left_x - 1;
 			temp.right_x := o.right_x - 1;
@@ -89,7 +89,8 @@ package body obstacle_pkg is
 			-- Regenerate object at the right side of screen
 			temp.left_x  := to_unsigned(360,9);
 			temp.right_x := to_unsigned(380,9);
-			-- Random height
+		
+			-- Assign height depending on random
 			case random is
 			when "000" =>
 				temp.upper_bottom_y := to_unsigned(20, 8);

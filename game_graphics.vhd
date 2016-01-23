@@ -33,7 +33,7 @@ architecture behavoiour of game_graphics is
 	signal counter_y : unsigned(7 downto 0) := (others => '0');
 	
 	type obstacle_list is array (0 to 3) of obstacle;
-	signal flappy : bird := (pos_x => to_unsigned(10,9), pos_y => to_unsigned(120,8));
+	signal flappy : bird := bird_init;
 	
 	constant empty_obstacle : obstacle := (
 		left_x => to_unsigned(0,9),
@@ -56,10 +56,7 @@ begin
 			if (reset_n = '0') then
 				-- Reset game to initial state
 				current_state := init_game_state;
-				frame_counter := (others => '0');
-				game_sync_timer := (others => '0');
-				counter_x <= (others => '0');
-				counter_y <= (others => '0');
+
 			else
 				game_sync_timer := game_sync_timer + 1;
 				
@@ -67,10 +64,15 @@ begin
 				when init_game_state =>
 					-- Initiate infinite thin obstacles
 					-- will be given correct width at first update
+					flappy := bird_init;
 					obstacles(0) <= obstacle_init_0;
 					obstacles(1) <= obstacle_init_1;
 					obstacles(2) <= obstacle_init_2;
 					obstacles(3) <= obstacle_init_3;
+					frame_counter := (others => '0');
+					game_sync_timer := (others => '0');
+					counter_x <= (others => '0');
+					counter_y <= (others => '0');
 					current_state := wait_state;
 					
 				when wait_state =>
