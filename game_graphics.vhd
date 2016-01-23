@@ -33,7 +33,7 @@ entity game_graphics is
     data_vga          : out std_logic_vector( 2 downto 0);
     write_vga         : out std_logic;
     status_sync_write : in  std_logic;
-    score_out         : out std_logic_vector(31 downto 0)
+    score_out         : out std_logic_vector(17 downto 0)
   );
 end entity;
 
@@ -60,10 +60,11 @@ begin
     variable current_state : game_state := init_game_state;
     variable game_sync_timer : unsigned(31 downto 0) := (others => '0');
     variable frame_counter : unsigned(31 downto 0) := (others => '0');
+	 variable game_score : unsigned(17 downto 0) := (others => '0');
     variable pixel_color : std_logic_vector(2 downto 0);
   begin
     -- Score in seconds, 60 Hz
-    score_out <= std_logic_vector(frame_counter / 60);
+    score_out <= std_logic_vector(game_score);
 
     if rising_edge(clk) then
       if (reset_n = '0') then
@@ -84,6 +85,7 @@ begin
           obstacles(2) <= obstacle_init_2;
           obstacles(3) <= obstacle_init_3;
           frame_counter := (others => '0');
+			 game_score := (others => '0');
           game_sync_timer := (others => '0');
           counter_x <= (others => '0');
           counter_y <= (others => '0');
@@ -145,7 +147,12 @@ begin
           end if;
 
         when update_objects_state =>
-          frame_counter := frame_counter + 1;
+		    if (frame_counter = 60) then
+				game_score := game_score + 1;
+				frame_counter := (others => '0');
+			 else
+			   frame_counter := frame_counter + 1;
+			 end if;
           write_vga <= '0';
           current_state := wait_state;
 

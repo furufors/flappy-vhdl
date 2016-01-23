@@ -104,6 +104,8 @@ package body bird_pkg is
       temp.pos_y := b.pos_y - 1; -- up
     elsif (b.pos_y < lower_limit) then
       temp.pos_y := b.pos_y + 1; -- down
+	 else
+		temp.pos_y := b.pos_y;
     end if;
     return temp;
   end;

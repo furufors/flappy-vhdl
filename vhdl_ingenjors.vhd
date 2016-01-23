@@ -34,7 +34,6 @@ architecture behavoiour of vhdl_ingenjors is
   signal status_sync_write_signal : std_logic;
   signal sensor_height : std_logic_vector(7 downto 0);
   signal random_signal : std_logic_vector(2 downto 0);
-  signal score_signal : std_logic_vector(31 downto 0);
 begin
 
 -- The mapping of the HC-SR04 to hardware, attached to GPIO and +5V and GND
@@ -103,10 +102,7 @@ graphics_inst : entity work.game_graphics
     data_vga_signal,
     write_vga_signal,
     status_sync_write_signal,
-    score_signal
+    LEDR  -- The game score in seconds is displayed on the leds, binary...
   );
-
-  -- The game score in seconds is displayed on the leds, binary...
-  LEDR <= score_signal(17 downto 0);
 
 end architecture;

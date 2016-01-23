@@ -18,9 +18,16 @@ create_clock -name SYSTEM_CLOCK -period 20.000 [get_ports {CLOCK_50}]
 derive_clock_uncertainty
 derive_pll_clocks
 
+# Since done-signal from sensor acts like a clock:
+derive_clocks -period 20.00
+
 # Asynchronous inputs are treated as false paths
 set_false_path -from [get_ports {SW[17]}]
 
+# Input timing specifications
+set_input_delay -clock { SYSTEM_CLOCK } -min 0.7 [all_inputs]
+set_input_delay -clock { SYSTEM_CLOCK } -max 3.15 [all_inputs]
+
 # Output timing specifications
-set_output_delay -clock { SYSTEM_CLOCK } -min 0.7 [get_ports {VGA_*}]
-set_output_delay -clock { SYSTEM_CLOCK } -max 3.15 [get_ports {VGA_*}]%  
+set_output_delay -clock { SYSTEM_CLOCK } -min 1 [all_outputs]
+set_output_delay -clock { SYSTEM_CLOCK } -max 2.05 [all_outputs]
