@@ -17,7 +17,6 @@ entity vhdl_ingenjors is
     GPIO_TX_P0 : in std_logic;
     GPIO_TX_P1 : out std_logic;
     LEDR       : out std_logic_vector(17 downto 0);
-    LEDG       : out std_logic_vector(2 downto 0);
     SW      : in std_logic_vector(17 downto 0);
     VGA_HS, VGA_VS, VGA_clk : OUT std_logic;
     VGA_BLANK_N, VGA_SYNC_N : OUT std_logic;

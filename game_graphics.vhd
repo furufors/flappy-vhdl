@@ -76,7 +76,7 @@ begin
         -- Finite state machine to handle program flow
         case current_state is
         when init_game_state =>
-          flappy := bird_init;
+          flappy <= bird_init;
           -- Initiate infinite thin obstacles
           -- will be given correct width at first update
           obstacles(0) <= obstacle_init_0;
